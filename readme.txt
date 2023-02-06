@@ -1,10 +1,11 @@
 sp500_fulllist.csv: full sp500 companies (299 because GOOG and GOOGL are both in it), as of 02/02/2022, from wiki
-sp500_fulllist_ranked.csv: copy-pasted with mkt cap from https://www.slickcharts.com/sp500
+sp500_fulllist_ranked.xlsx: copy-pasted with mkt cap from https://www.slickcharts.com/sp500. starting 2023. 2022 data is a copy of 2023
 
 
-sp500_history_price_raw.csv: daily price data of sp500 stocks, downloaded using akshare from finance.sina.com.cn/stock/usstock/sector.shtml
-sp500_history_raw.csv: fundamental data of sp500 stocks, downloaded using akshare from https://www.macrotrends.net/stocks/charts/AAPL/apple/pe-ratio. The data is quarterly, while the last row is values on the day of data retrieval 
-sp500_history_filterd.csv: fundamental data of sp500 stocks, processed from sp500_history_raw.csv including formating and conversion to quarter
+sp500_history_price_raw_xxxx.csv: daily price data of sp500 stocks, downloaded using akshare from finance.sina.com.cn/stock/usstock/sector.shtml
+sp500_history_raw_xxxx.csv: fundamental data of sp500 stocks, downloaded using akshare from https://www.macrotrends.net/stocks/charts/AAPL/apple/pe-ratio. The data is quarterly, while the last row is values on the day of data retrieval 
+
+sp500_history_filterd.csv: fundamental data of sp500 stocks, processed from sp500_history_raw.csv including formating and conversion to quarter (deprecated)
 
 
 sp500_index_history.csv: history of sp500 index from https://datahub.io/core/s-and-p-500#resource-data
