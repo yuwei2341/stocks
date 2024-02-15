@@ -1,4 +1,5 @@
 """ Library for stocks """
+
 #!/usr/bin/env python3
 
 import pandas as pd
@@ -29,7 +30,7 @@ def get_quarter(df, date_column="date"):
     return df
 
 
-def pick_stocks(df, cash_to_invest, n_stocks, mmt_var, top_by_mmt):
+def pick_stocks(df, cash_to_invest, n_stocks, mmt_var, top_by_mmt=None):
     """Pick stocks based on momentum and pb, used in the magic formula
     - Look for the top_by_mmt fraction of companies that have the largest mmt_var
     - Sort these companies by price-to-book value in ascending order
@@ -38,17 +39,27 @@ def pick_stocks(df, cash_to_invest, n_stocks, mmt_var, top_by_mmt):
         A df with all the stocks chosen and their mmt_var and PB
     Note:
         mmt_var is a momentum variable like 6 month price momentum
+        Edit: let top_by_mmt=None for backward compatibility.
+        If it's none, no mmt_var filter is done
     """
 
+    # Filter by price momentum
+    if top_by_mmt is None:
+        df_top_by_mmt = df
+    else:
+        df_top_by_mmt = (
+            df[(~df["book_value_per_share"].isnull()) & (df["price_to_book_ratio"] > 0)]
+            .sort_values(mmt_var, ascending=False)
+            .iloc[: round(len(df) * top_by_mmt), :]
+        )
+
+    # Filter by PB
     cash_for_each_stock = cash_to_invest / n_stocks
-    top_by_mmt = (
-        df[(~df["book_value_per_share"].isnull()) & (df["price_to_book_ratio"] > 0)]
-        .sort_values(mmt_var, ascending=False)
-        .iloc[: round(len(df) * top_by_mmt), :]
-    )
     stocks_by_mmt_pb = (
-        top_by_mmt.sort_values("price_to_book_ratio").head(n_stocks).copy()
+        df_top_by_mmt.sort_values("price_to_book_ratio").head(n_stocks).copy()
     )
+
+    # Determine shares to buy
     stocks_by_mmt_pb["shares"] = cash_for_each_stock / stocks_by_mmt_pb["stock_price"]
     stocks_by_mmt_pb_simple = stocks_by_mmt_pb[
         [
@@ -59,7 +70,7 @@ def pick_stocks(df, cash_to_invest, n_stocks, mmt_var, top_by_mmt):
             "price_to_book_ratio",
             "book_value_per_share",
         ]
-    ]
+    ].copy()
     # Change momentum to percentage
     stocks_by_mmt_pb_simple[mmt_var + "_pct"] = (
         stocks_by_mmt_pb_simple[mmt_var] * 100
