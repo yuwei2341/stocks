@@ -8,6 +8,7 @@ glove.6B.50d.txt
 *.csv
 *.xlsx
 *.my
+*.key
 # folder: / means the folder where .gitignore is 
 /data/
 
